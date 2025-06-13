@@ -44,7 +44,6 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			INT i = SendMessage(hCombo, CB_GETCURSEL, 0, 0);
 			SendMessage(hCombo, CB_GETLBTEXT, i, (LPARAM)sz_buffer);
 			if (i == -1)strcpy(sz_message, "Выберите ваш вариант");
-			//	strcat(sz_buffer , )
 			else
 				sprintf(sz_message, "Вы выбрали пункт %i со значением %s", i, sz_buffer);
 			MessageBox(hwnd, sz_message, "Info", MB_OK | MB_ICONINFORMATION);
