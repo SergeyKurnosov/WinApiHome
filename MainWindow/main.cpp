@@ -1,5 +1,6 @@
 #include<Windows.h>
 #include<stdio.h>
+#include"resource.h"
 
 CONST CHAR g_sz_CLASS_NAME[] = "My First Window";
 
@@ -16,9 +17,21 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	wClass.cbWndExtra = 0; // доп байты после экзэмрляра окна 
 	wClass.cbClsExtra = 0; // доп байты после структуры 
 
-	wClass.hIcon = LoadIcon(NULL, IDI_APPLICATION); // дескриптор значка
-	wClass.hIconSm = LoadIcon(NULL, IDI_APPLICATION); // дескриптор небольшого значка
-	wClass.hCursor = LoadCursor(NULL, IDC_ARROW); // дескриптор курсора 
+	wClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON_BITCOIN)); // дескриптор значк
+	wClass.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON_ATOM));// дескриптор небольшого значка
+
+	//	wClass.hIcon = (HICON)LoadImage(hInstance,"atom.ico", IMAGE_ICON, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);
+//	wClass.hIconSm = (HICON)LoadImage(hInstance,"bitcoin.ico", IMAGE_ICON, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);
+	
+	//wClass.hCursor = LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR1)); // дескриптор курсора 
+	wClass.hCursor = (HCURSOR)LoadImage(
+		hInstance, 
+		"starcraft-original\\Working In Background.ani",
+		IMAGE_CURSOR,
+		256,
+		256,
+		LR_LOADFROMFILE
+		);
 	wClass.hbrBackground = (HBRUSH)COLOR_WINDOW; // дескрипотр фоновой кисти 
 
 	wClass.hInstance = hInstance; // дескриптор экземпляра
@@ -32,22 +45,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		return 0;
 	}
 	//2///////////////////////////////////////////////////////////
-	//RECT rect;
-	//SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
-	//int screenWidth = rect.right - rect.left;
-	//int screenHeight = rect.bottom - rect.top;
-
-	//int windowWidth = (int)screenWidth * 0.75;
-	//int windowHeight = (int)screenHeight * 0.75;
-
-	//int xPos = rect.left + (screenWidth - windowWidth) / 2;
-	//int yPos = rect.top + (screenHeight - windowHeight) / 2;
-
-	//CONST INT SIZE = 256;
-
-	//CHAR sz_message[256] = {};
-	//sprintf(sz_message, "Размер: %dx%d, Положение: (%d,%d)", windowWidth, windowHeight, xPos, yPos);
-
 
 	INT screen_width = GetSystemMetrics(SM_CXSCREEN);
 	INT screen_height = GetSystemMetrics(SM_CYSCREEN);
