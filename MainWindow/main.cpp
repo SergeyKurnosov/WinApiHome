@@ -1,5 +1,5 @@
 #include<Windows.h>
-#include<cstdio>
+#include<stdio.h>
 
 CONST CHAR g_sz_CLASS_NAME[] = "My First Window";
 
@@ -32,33 +32,40 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		return 0;
 	}
 	//2///////////////////////////////////////////////////////////
+	//RECT rect;
+	//SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
+	//int screenWidth = rect.right - rect.left;
+	//int screenHeight = rect.bottom - rect.top;
 
-	RECT rect;
-	SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
-	int screenWidth = rect.right - rect.left;
-	int screenHeight = rect.bottom - rect.top;
+	//int windowWidth = (int)screenWidth * 0.75;
+	//int windowHeight = (int)screenHeight * 0.75;
 
-	int windowWidth = (int)screenWidth * 0.75;
-	int windowHeight = (int)screenHeight * 0.75;
+	//int xPos = rect.left + (screenWidth - windowWidth) / 2;
+	//int yPos = rect.top + (screenHeight - windowHeight) / 2;
 
-	int xPos = rect.left + (screenWidth - windowWidth) / 2;
-	int yPos = rect.top + (screenHeight - windowHeight) / 2;
+	//CONST INT SIZE = 256;
 
-	CONST INT SIZE = 256;
+	//CHAR sz_message[256] = {};
+	//sprintf(sz_message, "Размер: %dx%d, Положение: (%d,%d)", windowWidth, windowHeight, xPos, yPos);
 
-	CHAR sz_message[256] = {};
-	sprintf(sz_message, "Размер: %dx%d, Положение: (%d,%d)", windowWidth, windowHeight, xPos, yPos);
+
+	INT screen_width = GetSystemMetrics(SM_CXSCREEN);
+	INT screen_height = GetSystemMetrics(SM_CYSCREEN);
+	INT window_width = screen_width * .75;
+	INT window_height = screen_height * 3 / 4;
+	INT window_start_x = screen_width / 8;
+	INT window_start_y = screen_height / 8;
+
+
 
 	HWND hwnd = CreateWindowEx
 	(
 		NULL,
 		g_sz_CLASS_NAME,
-		sz_message,
+		g_sz_CLASS_NAME,
 		WS_OVERLAPPEDWINDOW,
-		xPos, 
-		yPos,
-		windowWidth,
-		windowHeight,
+		window_start_x, window_start_y,
+		window_width, window_height,
 		NULL,
 		NULL,
 		hInstance,
@@ -91,6 +98,26 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 		break;
+	case WM_MOVE:
+	case WM_SIZE:
+	{
+		RECT window_rect;
+		GetWindowRect(hwnd, &window_rect);
+		INT window_width = window_rect.right - window_rect.left;
+		INT window_height = window_rect.bottom - window_rect.top;
+		CONST INT SIZE = 256;
+		CHAR sz_title[SIZE] = {};
+		sprintf
+		(
+			sz_title,
+			"%s - Position:%ix%i, Size:%ix%i",
+			g_sz_CLASS_NAME,
+			window_rect.left, window_rect.top,
+			window_width, window_height
+		);
+		SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)sz_title);
+	}
+	break;
 	case WM_COMMAND:
 		break;
 	case WM_DESTROY:
