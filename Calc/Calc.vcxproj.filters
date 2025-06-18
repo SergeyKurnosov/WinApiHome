@@ -30,17 +30,8 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="bitcoin.ico">
+    <Image Include="ICO\calc2_43470.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="atom.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cursor1.cur">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="starcraft-original\Busy.ani" />
   </ItemGroup>
 </Project>

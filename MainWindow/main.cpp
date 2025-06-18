@@ -2,6 +2,10 @@
 #include<stdio.h>
 #include"resource.h"
 
+#define IDC_STATIC   1000
+#define IDC_EDIT     1001
+#define IDC_BUTTON   1002
+
 CONST CHAR g_sz_CLASS_NAME[] = "My First Window";
 
 INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -22,16 +26,16 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 
 	//	wClass.hIcon = (HICON)LoadImage(hInstance,"atom.ico", IMAGE_ICON, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);
 //	wClass.hIconSm = (HICON)LoadImage(hInstance,"bitcoin.ico", IMAGE_ICON, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);
-	
+
 	//wClass.hCursor = LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR1)); // дескриптор курсора 
 	wClass.hCursor = (HCURSOR)LoadImage(
-		hInstance, 
+		hInstance,
 		"starcraft-original\\Working In Background.ani",
 		IMAGE_CURSOR,
-		256,
-		256,
+		LR_DEFAULTSIZE,
+		LR_DEFAULTSIZE,
 		LR_LOADFROMFILE
-		);
+	);
 	wClass.hbrBackground = (HBRUSH)COLOR_WINDOW; // дескрипотр фоновой кисти 
 
 	wClass.hInstance = hInstance; // дескриптор экземпляра
@@ -83,7 +87,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		DispatchMessage(&msg);
 	}
 
-	return msg.message;
+	return msg.wParam;
 }
 
 
@@ -94,6 +98,44 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_CREATE:
+		CreateWindowEx
+		(
+			NULL,
+			"Static",
+			"Этот staticText создан при помощи функции CreateWindowEx().",
+			WS_CHILD | WS_VISIBLE,
+			10, 10,
+			550, 25,
+			hwnd,
+			(HMENU)IDC_STATIC,
+			GetModuleHandle(NULL),
+			NULL
+		);
+		CreateWindowEx
+		(
+			NULL,
+			"Edit", "",
+			WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER,
+			10, 50,
+			550, 22,
+			hwnd,
+			(HMENU)IDC_EDIT,
+			GetModuleHandle(NULL),
+			NULL
+		);
+		CreateWindowEx
+		(
+			NULL,
+			"Button", "Применить",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			450, 75,
+			110, 25,
+			hwnd,
+			(HMENU)IDC_BUTTON,
+			GetModuleHandle(NULL),
+			NULL
+		);
+
 		break;
 	case WM_MOVE:
 	case WM_SIZE:
@@ -116,6 +158,20 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDC_BUTTON:
+		{
+			HWND hEdit = GetDlgItem(hwnd, IDC_EDIT);
+			HWND hStatic = GetDlgItem(hwnd, IDC_STATIC);
+			CONST INT SIZE = 1024;
+			CHAR sz_buffer[SIZE] = {};
+			SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
+			SendMessage(hStatic, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+			SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+		}
+		break;
+		}
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
