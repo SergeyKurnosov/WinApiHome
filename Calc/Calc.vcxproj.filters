@@ -33,5 +33,8 @@
     <Image Include="ICO\calc2_43470.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="C:\Users\demom\Downloads\простой-ка-ьку-ятор-39303882.jpeg">
+      <Filter>Source Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
