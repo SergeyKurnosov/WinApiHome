@@ -1,5 +1,9 @@
 #include<Windows.h>
 #include"resource.h"
+#include<cstring>
+#include<string>
+#include<cstdio>
+#include<sstream>
 
 CONST CHAR g_sz_CLASS_NAME[] = "MyCalc";
 
@@ -27,6 +31,8 @@ CONST INT g_SIZE = 256;
 
 
 INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+BOOL CHECK_STR_BY_OPERATION(CHAR* str);
+DOUBLE GET_RESULT_OPERATION(CHAR* str);
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
@@ -60,7 +66,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		NULL,
 		g_sz_CLASS_NAME,
 		g_sz_CLASS_NAME,
-	//	WS_OVERLAPPED | WS_SYSMENU /*| WS_THICKFRAME*/  | WS_MINIMIZEBOX | /*WS_MAXIMIZEBOX*/,
+		//	WS_OVERLAPPED | WS_SYSMENU /*| WS_THICKFRAME*/  | WS_MINIMIZEBOX | /*WS_MAXIMIZEBOX*/,
 		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME ^ WS_MAXIMIZEBOX,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		g_i_WINDOW_WIDTH, g_i_WINDOW_HEIGHT,
@@ -185,6 +191,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CHAR szDisplay[g_SIZE] = {};
 		CHAR szDigit[2] = {};
 		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+
 		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_POINT)
 		{
 			if (LOWORD(wParam) == IDC_BUTTON_POINT)
@@ -193,12 +200,126 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				szDigit[0] = LOWORD(wParam) - IDC_BUTTON_0 + '0';
 			SendMessage(hEditDisplay, WM_GETTEXT, g_SIZE, (LPARAM)szDisplay);
 			if (szDisplay[0] == '0' && szDisplay[1] != '.')szDisplay[0] = 0;
-			if (szDigit[0] == '.' && strchr(szDisplay, '.'))break;
-			//
+			//	if (szDigit[0] == '.' && strchr(szDisplay, '.'))break;
 			strcat(szDisplay, szDigit);
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)szDisplay);
 		}
+		//////////////////////////////////////////////////////////////////////
+		if (LOWORD(wParam) == IDC_BUTTON_PLUS)
+		{
+			SendMessage(hEditDisplay, WM_GETTEXT, g_SIZE, (LPARAM)szDisplay);
 
+			if (CHECK_STR_BY_OPERATION(szDisplay))
+			{
+				char buffer[g_SIZE];
+				double result = GET_RESULT_OPERATION(szDisplay);
+				result - static_cast<int>(result) > 0 ?
+					snprintf(buffer, sizeof(buffer), "%.1f", result) :
+					sprintf(buffer, "%d", static_cast<int>(result));
+				strcat(buffer, "+");
+				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)buffer);
+				break;
+			}
+			else
+			{
+				strcat(szDisplay, "+");
+				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)szDisplay);
+			}
+		}
+
+		if (LOWORD(wParam) == IDC_BUTTON_MINUS)
+		{
+			SendMessage(hEditDisplay, WM_GETTEXT, g_SIZE, (LPARAM)szDisplay);
+
+			if (CHECK_STR_BY_OPERATION(szDisplay))
+			{
+				char buffer[g_SIZE];
+				double result = GET_RESULT_OPERATION(szDisplay);
+				result - static_cast<int>(result) > 0 ?
+					snprintf(buffer, sizeof(buffer), "%.1f", result) :
+					sprintf(buffer, "%d", static_cast<int>(result));
+				strcat(buffer, "-");
+				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)buffer);
+				break;
+			}
+			else
+			{
+				strcat(szDisplay, "-");
+				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)szDisplay);
+			}
+		}
+
+		if (LOWORD(wParam) == IDC_BUTTON_ASTER)
+		{
+			SendMessage(hEditDisplay, WM_GETTEXT, g_SIZE, (LPARAM)szDisplay);
+
+			if (CHECK_STR_BY_OPERATION(szDisplay))
+			{
+				char buffer[g_SIZE];
+				double result = GET_RESULT_OPERATION(szDisplay);
+				result - static_cast<int>(result) > 0 ?
+					snprintf(buffer, sizeof(buffer), "%.1f", result) :
+					sprintf(buffer, "%d", static_cast<int>(result));
+				strcat(buffer, "*");
+				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)buffer);
+				break;
+			}
+			else
+			{
+				strcat(szDisplay, "*");
+				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)szDisplay);
+			}
+		}
+
+		if (LOWORD(wParam) == IDC_BUTTON_SLASH)
+		{
+			SendMessage(hEditDisplay, WM_GETTEXT, g_SIZE, (LPARAM)szDisplay);
+
+			if (CHECK_STR_BY_OPERATION(szDisplay))
+			{
+				char buffer[g_SIZE];
+				double result = GET_RESULT_OPERATION(szDisplay);
+				result - static_cast<int>(result) > 0 ?
+					snprintf(buffer, sizeof(buffer), "%.1f", result) :
+					sprintf(buffer, "%d", static_cast<int>(result));
+				strcat(buffer, "/");
+				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)buffer);
+				break;
+			}
+			else
+			{
+				strcat(szDisplay, "/");
+				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)szDisplay);
+			}
+		}
+
+		if (LOWORD(wParam) == IDC_BUTTON_BSP)
+		{
+			SendMessage(hEditDisplay, WM_GETTEXT, g_SIZE, (LPARAM)szDisplay);
+			if (strlen(szDisplay) >= 2)szDisplay[strlen(szDisplay) - 1] = '\0';
+			else wParam = IDC_BUTTON_CLR;
+
+			SendMessage(hEditDisplay, WM_SETTEXT, strlen(szDisplay) - 1, (LPARAM)szDisplay);
+		}
+
+		if (LOWORD(wParam) == IDC_BUTTON_CLR)
+		{
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)"0");
+		}
+
+		if (LOWORD(wParam) == IDC_BUTTON_EQUAL)
+		{
+			SendMessage(hEditDisplay, WM_GETTEXT, g_SIZE, (LPARAM)szDisplay);
+			if (CHECK_STR_BY_OPERATION(szDisplay))
+			{
+				char buffer[g_SIZE];
+				double result = GET_RESULT_OPERATION(szDisplay);
+				result - static_cast<int>(result) > 0 ?
+					snprintf(buffer, sizeof(buffer), "%.1f", result) :
+					sprintf(buffer, "%d", static_cast<int>(result));
+				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)buffer);
+			}
+		}
 	}
 	break;
 	case WM_DESTROY:
@@ -210,4 +331,44 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	default:return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
 	return FALSE;
+}
+
+
+BOOL CHECK_STR_BY_OPERATION(CHAR* str)
+{
+	if (strchr(str, '+') || strchr(str, '-') || strchr(str, '*') || strchr(str, '/'))
+		return TRUE;
+	else
+		return FALSE;
+}
+
+DOUBLE GET_RESULT_OPERATION(CHAR* str)
+{
+	CHAR* str_copy = (CHAR*)malloc(strlen(str) + 1);
+	DOUBLE left = 0, right = 0, result = 0;
+	try
+	{
+		if (str_copy != NULL)
+		{
+			strncpy(str_copy, str, strlen(str) + 1);
+			strtok(str_copy, "+-*/");
+			left = std::stod(str_copy);
+			str_copy = strtok(NULL, "+-*/");
+			if (str_copy != NULL)
+			{
+				right = std::stod(str_copy);
+			}
+		
+			if (strchr(str, '+'))result = left + right;
+			else if (strchr(str, '-'))result = left - right;
+			else if (strchr(str, '*'))result = left * right;
+			else if (strchr(str, '/') && right != 0)result = left / right;
+		}
+
+	}
+	catch (...)
+	{
+		result = 0;
+	}
+	return result;
 }
