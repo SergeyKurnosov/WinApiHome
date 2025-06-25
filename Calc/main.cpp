@@ -116,7 +116,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				CreateWindowEx
 				(
 					NULL, "Button", szDigit,
-					WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+					WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
 					g_i_BUTTON_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL) * j,
 					g_i_BUTTON_START_Y + (g_i_BUTTON_SIZE + g_i_INTERVAL) * i / 3,
 					g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
@@ -132,7 +132,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CreateWindowEx
 		(
 			NULL, "Button", "0",
-			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
 			g_i_BUTTON_START_X, g_i_BUTTON_START_Y + (g_i_BUTTON_SPACE) * 3,
 			g_i_BUTTON_SIZE_DOUBLE, g_i_BUTTON_SIZE,
 			hwnd,
@@ -143,7 +143,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CreateWindowEx
 		(
 			NULL, "Button", ".",
-			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
 			g_i_BUTTON_START_X + g_i_BUTTON_SPACE * 2,
 			g_i_BUTTON_START_Y + g_i_BUTTON_SPACE * 3,
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
@@ -158,7 +158,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CreateWindowEx
 			(
 				NULL, "Button", g_sz_OPERATIONS[i],
-				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
 				g_i_BUTTON_START_X + g_i_BUTTON_SPACE * 3, g_i_BUTTON_START_Y + g_i_BUTTON_SPACE * (3 - i),
 				g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 				hwnd,
@@ -173,7 +173,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CreateWindowEx
 			(
 				NULL, "Button", g_sz_EDIT[i],
-				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_ICON,
 				g_i_BUTTON_START_X + g_i_BUTTON_SPACE * 4,
 				g_i_BUTTON_START_Y + g_i_BUTTON_SPACE * i,
 				g_i_BUTTON_SIZE, i < 2 ? g_i_BUTTON_SIZE : g_i_BUTTON_SIZE_DOUBLE,
@@ -183,7 +183,27 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				NULL
 			);
 		}
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON_0)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_1), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_2), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON2)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_3), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON3)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_4), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON4)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_5), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON5)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_6), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON6)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_7), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON7)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_8), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON8)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_9), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON9)));
 
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_POINT), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON_POINT)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_PLUS), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON_PLUS)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_MINUS), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON_MINUS)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON_ASTER)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_SLASH), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON_SLASH)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_EQUAL), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON_EQUAL)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_BSP), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON_BACK)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_CLR), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON_CLEAR)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_9), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON9)));
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_9), BM_SETIMAGE, IMAGE_ICON, (LPARAM) LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON9)));
 	}
 	break;
 	case WM_COMMAND:

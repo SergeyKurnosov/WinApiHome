@@ -132,7 +132,25 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="ICO\0_number_3833.ico" />
+    <Image Include="ICO\1number_1_3080.ico" />
+    <Image Include="ICO\2number_2_3830.ico" />
+    <Image Include="ICO\3number_3_3078.ico" />
+    <Image Include="ICO\4number_4_3076.ico" />
+    <Image Include="ICO\5_number_3828.ico" />
+    <Image Include="ICO\6_number_3826.ico" />
+    <Image Include="ICO\7number_7_3825.ico" />
+    <Image Include="ICO\8number_8_3073.ico" />
+    <Image Include="ICO\9number_9_3072.ico" />
+    <Image Include="ICO\backspace_119404.ico" />
     <Image Include="ICO\calc2_43470.ico" />
+    <Image Include="ICO\clear_cart_shopping_icon_216867.ico" />
+    <Image Include="ICO\divide_3160.ico" />
+    <Image Include="ICO\dot-and-circle_icon-icons.com_73597.ico" />
+    <Image Include="ICO\equalsign_igual_3159.ico" />
+    <Image Include="ICO\minus-sign-inside-a-black-rounded-square-shape_icon-icons.com_73487.ico" />
+    <Image Include="ICO\multiply_delete_delete_3156.ico" />
+    <Image Include="ICO\plus-symbol-in-a-rounded-black-square_icon-icons.com_73451.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
