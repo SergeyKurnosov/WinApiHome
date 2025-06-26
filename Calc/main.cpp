@@ -104,7 +104,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		AllocConsole();
 		freopen("CONOUT$", "w", stdout);
 		//setlocale(LC_ALL, "");
-		//system("CHCP1251");
+		system("CHCP 1251");
 	//	SetConsoleOutPutCP(1251);
 
 		HWND hEditDisplay = CreateWindowEx
