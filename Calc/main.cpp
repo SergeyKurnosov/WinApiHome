@@ -205,7 +205,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hIcon);
 		*/
 		//SetSkin(hwnd, "metal_mistral");
-		SetSkinFromDLL(hwnd, "metal_mistral");
+		SetSkinFromDLL(hwnd, "square_blue");
 	}
 	break;
 	case WM_COMMAND:
@@ -465,7 +465,8 @@ VOID SetSkin(HWND hwnd, CONST CHAR sz_skin[])
 
 VOID SetSkinFromDLL(HWND hwnd, CONST CHAR sz_skin[])
 {
-	HMODULE hButtonsModule = LoadLibrary("Buttons.dll");
+	HMODULE hButtonsModule = LoadLibrary(sz_skin); 
+	//  принципиально важно чтобы dll файл находился в одном каталоге с нашим exe файлом
 	//HINSTANCE hButtons = GetModuleHandle("Buttons.dll");
 	for (int i = IDC_BUTTON_0; i <= IDC_BUTTON_EQUAL; i++)
 	{
