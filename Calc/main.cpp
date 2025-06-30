@@ -3,33 +3,8 @@
 #include<stdio.h>
 #include<iostream>
 #include"resource.h"
+#include"Constants.h"
 
-#define delimetr "\n------------------------------------\n"
-
-CONST CHAR g_sz_CLASS_NAME[] = "MyCalc";
-
-CONST CHAR* g_sz_OPERATIONS[] = { "+","-","*","/" };
-CONST CHAR* g_sz_EDIT[] = { "<-","C","=" };
-CONST CHAR* g_sz_BUTTON_FILENAMES[] = { "point", "plus", "minus", "aster", "slash", "bsp", "clr", "equal" };
-
-//g_i_ - Global Integer
-CONST INT g_i_BUTTON_SIZE = 50;
-CONST INT g_i_INTERVAL = 1;
-CONST INT g_i_BUTTON_SPACE = g_i_BUTTON_SIZE + g_i_INTERVAL;
-//CONST INT g_i_BUTTON_SPACE_DOUBLE = (g_i_BUTTON_SIZE + g_i_INTERVAL) * 2;
-
-CONST INT g_i_BUTTON_SIZE_DOUBLE = g_i_BUTTON_SIZE * 2 + g_i_INTERVAL;
-CONST INT g_i_START_X = 10;
-CONST INT g_i_START_Y = 10;
-CONST INT g_i_DISPLAY_HEIGHT = 48;
-CONST INT g_i_DISPLAY_WIDTH = g_i_BUTTON_SIZE * 5 + g_i_INTERVAL * 4;
-CONST INT g_i_BUTTON_START_X = g_i_START_X;
-CONST INT g_i_BUTTON_START_Y = g_i_START_Y + g_i_DISPLAY_HEIGHT + g_i_INTERVAL;
-
-CONST INT g_i_WINDOW_WIDTH = g_i_DISPLAY_WIDTH + 2 * g_i_START_X + 16;
-CONST INT g_i_WINDOW_HEIGHT = (g_i_DISPLAY_HEIGHT + g_i_INTERVAL) + g_i_BUTTON_SPACE * 4 + 2 * g_i_START_Y + 24 + 16;
-
-CONST INT g_SIZE = 256;
 
 
 INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -99,6 +74,8 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	static BOOL input = FALSE;           // пользователь ввел число
 	static BOOL input_operation = FALSE; // пользователь ввел знак операции
 
+	static INT index = 0;
+
 	switch (uMsg)
 	{
 	case WM_CREATE:
@@ -140,7 +117,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);
 
 
-			INT iDigit = IDC_BUTTON_1;
+		INT iDigit = IDC_BUTTON_1;
 		CHAR szDigit[2] = {};
 		for (int i = 6; i >= 0; i -= 3)
 		{
@@ -224,10 +201,26 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SendMessage(hwnd, WM_SETICON, 0, (LPARAM)hIcon);
 		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hIcon);
 		*/
-		SetSkin(hwnd, "metal_mistral");
-		//SetSkinFromDLL(hwnd, "square_blue");
+		//SetSkin(hwnd, "metal_mistral");
+		SetSkinFromDLL(hwnd, "square_blue");
 	}
 	break;
+
+	case WM_CTLCOLOREDIT:
+	{
+		HDC hdcEdit = (HDC)wParam;
+		SetBkColor(hdcEdit, g_DISPLAY_BACKGROUND[index]);
+		SetTextColor(hdcEdit, RGB(255, 50, 50));
+
+		HBRUSH hbrBackground = CreateSolidBrush(g_WINDOW_BACKGROUND[index]);
+		SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hbrBackground);
+		SendMessage(hwnd, WM_ERASEBKGND, wParam, 0);
+		RedrawWindow(hwnd, NULL, NULL, RDW_ERASE);
+		return (LRESULT)hbrBackground;
+
+	}
+	break;
+
 	case WM_COMMAND:
 	{
 		CHAR szDisplay[g_SIZE] = {};
@@ -293,10 +286,10 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			sprintf(szDisplay, "%g", a);
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)szDisplay);
 		}
+		if (LOWORD(wParam) == IDC_EDIT_DISPLAY && HIWORD(wParam) == EN_SETFOCUS)SetFocus(hwnd);
+		
 	}
 	break;
-
-
 
 	case WM_KEYDOWN:
 	{
@@ -421,9 +414,34 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		switch (item)
 		{
-		case CM_SQUARE_BLUE:SetSkinFromDLL(hwnd, "square_blue"); break;
+		case CM_EXIT: SendMessage(hwnd, WM_DESTROY, 0, 0); break;
+		case CM_SQUARE_BLUE:SetSkinFromDLL(hwnd, "square_blue"); ; break;
 		case CM_METAL_MISTRAL:SetSkinFromDLL(hwnd, "metal_mistral"); break;
 		}
+		DestroyMenu(hMainMenu);
+
+		if (item >= 201 && item <= 210)
+		{
+			index = item - CM_SQUARE_BLUE;
+			//SetSkin(hwnd, g_sz_SKIN[index]);
+			SetSkinFromDLL(hwnd, g_sz_SKIN[index]);
+
+
+
+			HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+			HDC hdcEditDisplay = GetDC(hEditDisplay);
+			SendMessage(hwnd, WM_CTLCOLOREDIT, (WPARAM)hdcEditDisplay, 0);
+			ReleaseDC(hEditDisplay, hdcEditDisplay); // контекст устройства обязательно освобождать
+
+
+			CHAR sz_buffer[g_SIZE] = {};
+			SendMessage(hwnd, WM_GETTEXT, g_SIZE, (LPARAM)sz_buffer);
+			SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)"");
+			SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+			SetFocus(hEditDisplay);
+		}
+
+		
 	}
 	break;
 
