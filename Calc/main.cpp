@@ -224,8 +224,8 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SendMessage(hwnd, WM_SETICON, 0, (LPARAM)hIcon);
 		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hIcon);
 		*/
-		//SetSkin(hwnd, "metal_mistral");
-		SetSkinFromDLL(hwnd, "square_blue");
+		SetSkin(hwnd, "metal_mistral");
+		//SetSkinFromDLL(hwnd, "square_blue");
 	}
 	break;
 	case WM_COMMAND:
@@ -409,6 +409,23 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 
+	case WM_CONTEXTMENU:
+	{
+		HMENU hMainMenu = CreatePopupMenu();
+		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_STRING, CM_EXIT, "Exit");
+		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_SEPARATOR, 0, NULL);
+		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_STRING, CM_SQUARE_BLUE, "Square Blue");
+		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_STRING, CM_METAL_MISTRAL, "Metal Mistral");
+
+		BOOL item = TrackPopupMenuEx(hMainMenu, TPM_RETURNCMD | TPM_RIGHTALIGN | TPM_BOTTOMALIGN, LOWORD(lParam), HIWORD(lParam), hwnd, NULL);
+
+		switch (item)
+		{
+		case CM_SQUARE_BLUE:SetSkinFromDLL(hwnd, "square_blue"); break;
+		case CM_METAL_MISTRAL:SetSkinFromDLL(hwnd, "metal_mistral"); break;
+		}
+	}
+	break;
 
 	case WM_DESTROY:
 		FreeConsole();
