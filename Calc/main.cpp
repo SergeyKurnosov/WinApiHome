@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include<iostream>
 #include"resource.h"
+#include"MathLibrary.h"
 
 #define delimetr "\n------------------------------------\n"
 
@@ -120,6 +121,32 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
+		int fontCount = AddFontResourceEx("FONT\lastfunk-street.colr_.ttf", FR_PRIVATE, 0);
+		if (fontCount > 0) {
+			std::cout << fontCount << std::endl;
+			HDC hdc = GetDC(hEditDisplay);
+			HFONT hFont = CreateFont(
+				0,
+				0,
+				0,
+				0,
+				FW_NORMAL,
+				FALSE,
+				FALSE,
+				FALSE,
+				DEFAULT_CHARSET,
+				OUT_DEFAULT_PRECIS,
+				CLIP_DEFAULT_PRECIS,
+				DEFAULT_QUALITY,
+				DEFAULT_PITCH | FF_DONTCARE,
+				TEXT("Lastfunk Street") 
+			);
+
+			SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);
+			ReleaseDC(hEditDisplay, hdc);
+		}
+
+
 		INT iDigit = IDC_BUTTON_1;
 		CHAR szDigit[2] = {};
 		for (int i = 6; i >= 0; i -= 3)
@@ -205,7 +232,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hIcon);
 		*/
 		//SetSkin(hwnd, "metal_mistral");
-		SetSkinFromDLL(hwnd, "square_blue");
+		SetSkinFromDLL(hwnd, "my_paint_buttons");
 	}
 	break;
 	case WM_COMMAND:
@@ -402,27 +429,27 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-LPSTR FormatLastError(DWORD dwErrorID)
-{
-	LPSTR lpszMessage = NULL;
-	FormatMessage
-	(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		NULL,
-		dwErrorID,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_RUSSIAN_RUSSIA),
-		(LPSTR)&lpszMessage,
-		NULL,
-		NULL
-	);
-	return lpszMessage;
-}
-VOID PrintLastError(DWORD dwErrorID)
-{
-	LPSTR lpszMessage = FormatLastError(GetLastError());
-	std::cout << lpszMessage << std::endl;
-	LocalFree(lpszMessage);
-}
+//LPSTR FormatLastError(DWORD dwErrorID)
+//{
+//	LPSTR lpszMessage = NULL;
+//	FormatMessage
+//	(
+//		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+//		NULL,
+//		dwErrorID,
+//		MAKELANGID(LANG_NEUTRAL, SUBLANG_RUSSIAN_RUSSIA),
+//		(LPSTR)&lpszMessage,
+//		NULL,
+//		NULL
+//	);
+//	return lpszMessage;
+//}
+//VOID PrintLastError(DWORD dwErrorID)
+//{
+//	LPSTR lpszMessage = FormatLastError(GetLastError());
+//	std::cout << lpszMessage << std::endl;
+//	LocalFree(lpszMessage);
+//}
 
 VOID SetSkin(HWND hwnd, CONST CHAR sz_skin[])
 {
@@ -440,7 +467,9 @@ VOID SetSkin(HWND hwnd, CONST CHAR sz_skin[])
 			g_i_BUTTON_SIZE,
 			LR_LOADFROMFILE
 		);
-		PrintLastError(GetLastError());
+	//	PrintLastError(GetLastError());
+		Errors::LastError::PrintLastError(GetLastError());
+		
 		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0 + i), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpIcon);
 	}
 	for (int i = IDC_BUTTON_POINT; i <= IDC_BUTTON_EQUAL; i++)
@@ -479,7 +508,9 @@ VOID SetSkinFromDLL(HWND hwnd, CONST CHAR sz_skin[])
 			i == IDC_BUTTON_EQUAL ? g_i_BUTTON_SIZE_DOUBLE : g_i_BUTTON_SIZE,
 			LR_SHARED
 		);
-		PrintLastError(GetLastError());
+	//	PrintLastError(GetLastError());
+		Errors::LastError::PrintLastError(GetLastError());
+
 		SendMessage(GetDlgItem(hwnd, i), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
 
 	}
