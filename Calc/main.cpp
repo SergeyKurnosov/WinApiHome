@@ -82,9 +82,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		AllocConsole();
 		freopen("CONOUT$", "w", stdout);
-		//setlocale(LC_ALL, "");
 		system("CHCP 1251");
-		//	SetConsoleOutPutCP(1251);
 
 		HWND hEditDisplay = CreateWindowEx
 		(
@@ -98,7 +96,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL
 		);
 
-		AddFontResourceEx("FONTS\\lastfunk-street.colr_ (mono).ttf", FR_PRIVATE, 0);
+		AddFontResourceEx("FONTS\\lastfunk-street.colr_.ttf", FR_PRIVATE, 0);
 		HFONT hFont = CreateFont
 		(
 			g_i_DISPLAY_HEIGHT - 2, g_i_DISPLAY_HEIGHT / 3,
@@ -210,7 +208,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		HDC hdcEdit = (HDC)wParam;
 		SetBkColor(hdcEdit, g_DISPLAY_BACKGROUND[index]);
-		SetTextColor(hdcEdit, RGB(255, 50, 50));
+		SetTextColor(hdcEdit, g_DISPLAY_FOREGROUND[index]);
 
 		HBRUSH hbrBackground = CreateSolidBrush(g_WINDOW_BACKGROUND[index]);
 		SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hbrBackground);
@@ -286,8 +284,8 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			sprintf(szDisplay, "%g", a);
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)szDisplay);
 		}
-		if (LOWORD(wParam) == IDC_EDIT_DISPLAY && HIWORD(wParam) == EN_SETFOCUS)SetFocus(hwnd);
-		
+		//if (LOWORD(wParam) == IDC_EDIT_DISPLAY && HIWORD(wParam) == EN_SETFOCUS)SetFocus(hwnd);
+		SetFocus(hwnd);
 	}
 	break;
 
@@ -425,8 +423,6 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			index = item - CM_SQUARE_BLUE;
 			//SetSkin(hwnd, g_sz_SKIN[index]);
 			SetSkinFromDLL(hwnd, g_sz_SKIN[index]);
-
-
 
 			HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
 			HDC hdcEditDisplay = GetDC(hEditDisplay);
