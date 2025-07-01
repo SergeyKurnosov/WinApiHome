@@ -22,7 +22,7 @@ CONST INT g_i_BUTTON_SPACE = g_i_BUTTON_SIZE + g_i_INTERVAL;
 CONST INT g_i_BUTTON_SIZE_DOUBLE = g_i_BUTTON_SIZE * 2 + g_i_INTERVAL;
 CONST INT g_i_START_X = 10;
 CONST INT g_i_START_Y = 10;
-CONST INT g_i_DISPLAY_HEIGHT = 22;
+CONST INT g_i_DISPLAY_HEIGHT = 48;
 CONST INT g_i_DISPLAY_WIDTH = g_i_BUTTON_SIZE * 5 + g_i_INTERVAL * 4;
 CONST INT g_i_BUTTON_START_X = g_i_START_X;
 CONST INT g_i_BUTTON_START_Y = g_i_START_Y + g_i_DISPLAY_HEIGHT + g_i_INTERVAL;
@@ -121,16 +121,16 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
-		int fontCount = AddFontResourceEx("FONT\lastfunk-street.colr_.ttf", FR_PRIVATE, 0);
+
+
+		INT fontCount = AddFontResourceEx("FONT\\lastfunk-street.colr_.ttf", FR_PRIVATE, 0);
 		if (fontCount > 0) {
 			std::cout << fontCount << std::endl;
-			HDC hdc = GetDC(hEditDisplay);
 			HFONT hFont = CreateFont(
+				g_i_DISPLAY_HEIGHT - 2, g_i_DISPLAY_HEIGHT / 3,
 				0,
 				0,
-				0,
-				0,
-				FW_NORMAL,
+			    FW_ULTRALIGHT,
 				FALSE,
 				FALSE,
 				FALSE,
@@ -138,12 +138,12 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				OUT_DEFAULT_PRECIS,
 				CLIP_DEFAULT_PRECIS,
 				DEFAULT_QUALITY,
-				DEFAULT_PITCH | FF_DONTCARE,
+				FF_DONTCARE,
 				TEXT("Lastfunk Street") 
 			);
 
 			SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);
-			ReleaseDC(hEditDisplay, hdc);
+		
 		}
 
 

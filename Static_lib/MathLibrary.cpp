@@ -19,11 +19,9 @@ std::string Errors::LastError::FormatLastError(DWORD dwErrorID)
 
 	std::string message(lpszMessage , size);
 	if (size && lpszMessage) {
-		//message = lpszMessage;
 		LocalFree(lpszMessage);
 	}
 	else {
-		// Если не удалось получить сообщение, возвращаем код ошибки в виде строки
 		message = "Не удалось получить описание ошибки.";
 	}
 
@@ -32,9 +30,5 @@ std::string Errors::LastError::FormatLastError(DWORD dwErrorID)
 
 VOID Errors::LastError::PrintLastError(DWORD dwErrorID)
 {
-//	std::wstring lpszMessage = FormatLastError(dwErrorID);
-//	std::wcout << lpszMessage << std::endl;
-	
 	std::cout << FormatLastError(dwErrorID) << std::endl;
-	//LocalFree(lpszMessage);
 }
