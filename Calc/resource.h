@@ -4,9 +4,19 @@
 //
 #define IDI_ICON                        101
 
+#define IDR_FONT1                       102
+#define IDR_FONT2                       103
+#define IDR_FONT3                       104
+#define IDR_FONT4                       105
+
 #define CM_EXIT                         200
 #define CM_SQUARE_BLUE                  201
 #define CM_METAL_MISTRAL                202
+
+#define CM_FONT_1                       203
+#define CM_FONT_2                       204
+#define CM_FONT_3                       205
+#define CM_FONT_4                       206
 
 
 #define IDC_EDIT_DISPLAY                999

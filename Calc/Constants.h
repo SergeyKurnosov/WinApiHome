@@ -34,4 +34,6 @@ CONST COLORREF g_DISPLAY_BACKGROUND[] = { RGB(0,0,100),RGB(100,100,100) };
 CONST COLORREF g_DISPLAY_FOREGROUND[] = { RGB(255,0,000),RGB(0,255,0) };
 
 CONST CHAR* g_sz_SKIN[] = { "square_blue", "metal_mistral" };
+CONST CHAR* g_sz_FONTS[] = { "Digital-7 Italic", "Pinyon Script", "Quantico", "Yuji Hentaigana Akebono"};
+CONST INT g_sz_FONTS_IDC[] = { IDR_FONT1 , IDR_FONT2, IDR_FONT3, IDR_FONT4 };
 

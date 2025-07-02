@@ -7,9 +7,12 @@
 
 
 
+
 INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 VOID SetSkin(HWND hwnd, CONST CHAR sz_skin[]);
 VOID SetSkinFromDLL(HWND hwnd, CONST CHAR sz_skin[]);
+VOID SetFontFromDLL(HWND hwnd, CONST CHAR sz_skin[]);
+VOID LoadFontsFromDLL(HMODULE hResModule, INT count);
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
@@ -95,9 +98,9 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
+		LoadFontsFromDLL(LoadLibrary("D:\\ProjectHW\\WinAPIHome\\x64\\Debug\\MyFonts.dll"), 4);
 
-		AddFontResourceEx("FONTS\\lastfunk-street.colr_.ttf", FR_PRIVATE, 0);
-		HFONT hFont = CreateFont
+		HFONT hFont_e = CreateFont
 		(
 			g_i_DISPLAY_HEIGHT - 2, g_i_DISPLAY_HEIGHT / 3,
 			0,
@@ -109,10 +112,9 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CLIP_DEFAULT_PRECIS,
 			ANTIALIASED_QUALITY,
 			FF_DONTCARE,
-			"Lastfunk Street"
+			"DEF"
 		);
-
-		SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);
+		SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont_e, TRUE);
 
 
 		INT iDigit = IDC_BUTTON_1;
@@ -404,9 +406,18 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		HMENU hMainMenu = CreatePopupMenu();
 		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_STRING, CM_EXIT, "Exit");
+
 		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_SEPARATOR, 0, NULL);
+
 		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_STRING, CM_SQUARE_BLUE, "Square Blue");
 		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_STRING, CM_METAL_MISTRAL, "Metal Mistral");
+
+		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_SEPARATOR, 0, NULL);
+
+		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_STRING, CM_FONT_1, "Digital - 7 Italic");
+		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_STRING, CM_FONT_2, "Pinyon Script");
+		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_STRING, CM_FONT_3, "Quantico");
+		InsertMenu(hMainMenu, 0, MF_BYPOSITION | MF_STRING, CM_FONT_4, "Yuji Hentaigana Akebono");
 
 		BOOL item = TrackPopupMenuEx(hMainMenu, TPM_RETURNCMD | TPM_RIGHTALIGN | TPM_BOTTOMALIGN, LOWORD(lParam), HIWORD(lParam), hwnd, NULL);
 
@@ -417,14 +428,21 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case CM_METAL_MISTRAL:SetSkinFromDLL(hwnd, "metal_mistral"); break;
 		}
 		DestroyMenu(hMainMenu);
+		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
 
-		if (item >= 201 && item <= 210)
+		if (item >= 203 && item <= 206)
+		{
+			int index_local = item - CM_FONT_1;
+			SetFontFromDLL(hEditDisplay, g_sz_FONTS[index_local]);
+		}
+
+		if (item >= 201 && item <= 202)
 		{
 			index = item - CM_SQUARE_BLUE;
 			//SetSkin(hwnd, g_sz_SKIN[index]);
 			SetSkinFromDLL(hwnd, g_sz_SKIN[index]);
 
-			HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+
 			HDC hdcEditDisplay = GetDC(hEditDisplay);
 			SendMessage(hwnd, WM_CTLCOLOREDIT, (WPARAM)hdcEditDisplay, 0);
 			ReleaseDC(hEditDisplay, hdcEditDisplay); // контекст устройства обязательно освобождать
@@ -437,7 +455,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SetFocus(hEditDisplay);
 		}
 
-		
+
 	}
 	break;
 
@@ -536,3 +554,47 @@ VOID SetSkinFromDLL(HWND hwnd, CONST CHAR sz_skin[])
 	}
 	FreeLibrary(hButtonsModule);
 }
+
+VOID SetFontFromDLL(HWND hwnd, const CHAR sz_skin[])
+{
+	HFONT hFont_e = CreateFont
+	(
+		g_i_DISPLAY_HEIGHT - 2, g_i_DISPLAY_HEIGHT / 3,
+		0,
+		0,
+		FW_BOLD,
+		FALSE, FALSE, FALSE,
+		DEFAULT_CHARSET,
+		OUT_TT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		ANTIALIASED_QUALITY,
+		FF_DONTCARE,
+		sz_skin
+	);
+	SendMessage(hwnd, WM_SETFONT, (WPARAM)hFont_e, TRUE);
+}
+
+VOID LoadFontsFromDLL(HMODULE hResModule, INT count)
+{
+	if (hResModule)
+	{
+		for (INT i = 0; i < count; i++)
+		{
+			HRSRC hRes = FindResource(hResModule, MAKEINTRESOURCE(g_sz_FONTS_IDC[i]), RT_FONT);
+			if (hRes)
+			{
+				HGLOBAL hResData = LoadResource(hResModule, hRes);
+				if (hResData)
+				{
+					void* pFontData = LockResource(hResData);
+					DWORD dwSize = SizeofResource(hResModule, hRes);
+					DWORD cFonts;
+					HANDLE hFont = AddFontMemResourceEx(pFontData, dwSize, NULL, &cFonts);
+					if (hFont) std::cout << "шрифт успешно добавлен\n";
+				}
+			}
+		}
+	}
+}
+
+
