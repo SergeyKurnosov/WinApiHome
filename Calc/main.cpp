@@ -10,6 +10,9 @@
 INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 VOID SetSkin(HWND hwnd, CONST CHAR sz_skin[]);
 VOID SetSkinFromDLL(HWND hwnd, CONST CHAR sz_skin[]);
+VOID LoadFontDLL(HMODULE hFontModule, INT resourceID);
+VOID LoadFontsFromDLL(HMODULE hFontModule);
+VOID SetFont(HWND hwnd, CONST CHAR font_name[]);
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
@@ -75,6 +78,8 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	static BOOL input_operation = FALSE; // пользователь ввел знак операции
 
 	static INT index = 0;
+	static INT font_index = 0;
+
 
 	switch (uMsg)
 	{
@@ -96,23 +101,23 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL
 		);
 
-		AddFontResourceEx("FONTS\\lastfunk-street.colr_.ttf", FR_PRIVATE, 0);
-		HFONT hFont = CreateFont
-		(
-			g_i_DISPLAY_HEIGHT - 2, g_i_DISPLAY_HEIGHT / 3,
-			0,
-			0,
-			FW_BOLD,
-			FALSE, FALSE, FALSE,
-			DEFAULT_CHARSET,
-			OUT_TT_PRECIS,
-			CLIP_DEFAULT_PRECIS,
-			ANTIALIASED_QUALITY,
-			FF_DONTCARE,
-			"Lastfunk Street"
-		);
+		//AddFontResourceEx("FONTS\\lastfunk-street.colr_.ttf", FR_PRIVATE, 0);
+		//HFONT hFont = CreateFont
+		//(
+		//	g_i_DISPLAY_HEIGHT - 2, g_i_DISPLAY_HEIGHT / 3,
+		//	0,
+		//	0,
+		//	FW_BOLD,
+		//	FALSE, FALSE, FALSE,
+		//	DEFAULT_CHARSET,
+		//	OUT_TT_PRECIS,
+		//	CLIP_DEFAULT_PRECIS,
+		//	ANTIALIASED_QUALITY,
+		//	FF_DONTCARE,
+		//	"Lastfunk Street"
+		//);
 
-		SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);
+	//	SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);
 
 
 		INT iDigit = IDC_BUTTON_1;
@@ -201,6 +206,11 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		*/
 		//SetSkin(hwnd, "metal_mistral");
 		SetSkinFromDLL(hwnd, "square_blue");
+
+		HMODULE hFonts = LoadLibrary("Font-onlyDLL");
+		LoadFontsFromDLL(hFonts);
+		SetFont(hwnd, g_sz_FONT[font_index]);
+
 	}
 	break;
 
@@ -535,4 +545,43 @@ VOID SetSkinFromDLL(HWND hwnd, CONST CHAR sz_skin[])
 
 	}
 	FreeLibrary(hButtonsModule);
+}
+
+VOID LoadFontDLL(HMODULE hFontModule, INT resourceID)
+{
+	HRSRC hFntRes = FindResource(hFontModule, MAKEINTRESOURCE(resourceID), MAKEINTRESOURCE(RT_FONT));
+	HGLOBAL hFntMem = LoadResource(hFontModule, hFntRes);
+	VOID* fntData = LockResource(hFntMem);
+	DWORD nFonts = 0 , len = SizeofResource(hFontModule, hFntRes);
+	AddFontMemResourceEx(fntData, len, NULL, &nFonts);
+
+}
+
+VOID LoadFontsFromDLL(HMODULE hFontModule)
+{
+	for (int i = 301; i <= 304; i++)
+	{
+		LoadFontDLL(hFontModule, i);
+	}
+}
+
+VOID SetFont(HWND hwnd, CONST CHAR font_name[])
+{
+	HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+//	AddFontResourceEx("FONTS\\lastfunk-street.colr_.ttf", FR_PRIVATE, 0);
+	HFONT hFont = CreateFont
+	(
+		g_i_DISPLAY_HEIGHT - 2, g_i_DISPLAY_HEIGHT / 3,
+		0,
+		0,
+		FW_BOLD,
+		FALSE, FALSE, FALSE,
+		DEFAULT_CHARSET,
+		OUT_TT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		ANTIALIASED_QUALITY,
+		FF_DONTCARE,
+		font_name
+	);
+	SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);
 }
