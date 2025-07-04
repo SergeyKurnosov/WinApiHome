@@ -434,6 +434,7 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			int index_local = item - CM_FONT_1;
 			SetFontFromDLL(hEditDisplay, g_sz_FONTS[index_local]);
+			SetSkinFromDLL(hwnd, g_sz_SKIN[index]);
 		}
 
 		if (item >= 201 && item <= 202)
