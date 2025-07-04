@@ -9,6 +9,12 @@
 #define CM_METAL_MISTRAL                202
 
 
+#define IDF_FONT_1                      301
+#define IDF_FONT_2                      302
+#define IDF_FONT_3						303
+#define IDF_FONT_4					    304
+
+
 #define IDC_EDIT_DISPLAY                999
 #define IDC_BUTTON_0                   1000
 #define IDC_BUTTON_1                   1001
