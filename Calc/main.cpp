@@ -1,3 +1,4 @@
+//#define DEBUG
 #include<Windows.h>
 #include<float.h>
 #include<stdio.h>
@@ -86,9 +87,14 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 	{
+#ifdef DEBUG
 		AllocConsole();
 		freopen("CONOUT$", "w", stdout);
 		system("CHCP 1251");
+#endif // DEBUG
+
+
+
 
 		HWND hEditDisplay = CreateWindowEx
 		(
@@ -430,9 +436,9 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		for (INT i = 0; i < 4; i++)
 			InsertMenu(hMenuFonts, i, MF_BYPOSITION | MF_STRING, i + 301, g_sz_FONT[i]);
 		InsertMenu(hMainMenu, 0, MF_POPUP | MF_BYPOSITION, (UINT_PTR)hMenuFonts, "Fonts");
-		
+
 		CheckMenuItem(hMenuFonts, font_index, MF_BYPOSITION | MF_CHECKED);
-		CheckMenuItem(hMainMenu, index+201, MF_BYCOMMAND| MF_CHECKED);
+		CheckMenuItem(hMainMenu, index + 201, MF_BYCOMMAND | MF_CHECKED);
 
 		BOOL item = TrackPopupMenuEx(hMainMenu, TPM_RETURNCMD | TPM_RIGHTALIGN | TPM_BOTTOMALIGN, LOWORD(lParam), HIWORD(lParam), hwnd, NULL);
 
