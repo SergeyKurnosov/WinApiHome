@@ -1,13 +1,20 @@
 #include<Windows.h>
+#include<iostream>
 #include<stdio.h>
-#include"resource.h"
+#include <commdlg.h>
+#include <fstream>
+#include <string>
+#include "resource.h"
 
-#define IDC_STATIC   1000
-#define IDC_EDIT     1001
-#define IDC_BUTTON   1002
+
+#define IDC_STATIC     1000
+#define IDC_EDIT       1001
+#define IDC_BUTTON     1002
+#define IDC_BUTTON_C   1003
 
 INT screen_width = GetSystemMetrics(SM_CXSCREEN);
 INT screen_height = GetSystemMetrics(SM_CYSCREEN);
+
 INT window_width = screen_width * .75;
 INT window_height = screen_height * 3 / 4;
 INT window_start_x = screen_width / 8;
@@ -16,6 +23,10 @@ INT window_start_y = screen_height / 8;
 CONST CHAR g_sz_CLASS_NAME[] = "My First Window";
 
 INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+std::string GetEditText(HWND hwndEdit);
+
+void SaveTextFromEdit(HWND hwndEdit, OPENFILENAME ofn);
+void SaveTextFromFile(HWND hwndEdit, OPENFILENAME ofn);
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
@@ -29,7 +40,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 
 	wClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON_BITCOIN));
 	wClass.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON_ATOM));
-
 	wClass.hCursor = (HCURSOR)LoadImage(
 		hInstance,
 		"starcraft-original\\Working In Background.ani",
@@ -38,8 +48,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		LR_DEFAULTSIZE,
 		LR_LOADFROMFILE
 	);
-
 	wClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
+
 	wClass.hInstance = hInstance;
 	wClass.lpfnWndProc = (WNDPROC)WndProc;
 	wClass.lpszMenuName = NULL;
@@ -50,10 +60,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		MessageBox(NULL, "CLass registration", "", MB_OK | MB_ICONERROR);
 		return 0;
 	}
-
-
-
-
 
 	HWND hwnd = CreateWindowEx
 	(
@@ -75,7 +81,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	}
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
-
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0) > 0)
 	{
@@ -86,11 +91,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	return msg.wParam;
 }
 
-
-
-
 INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+
 	switch (uMsg)
 	{
 	case WM_CREATE:
@@ -111,26 +114,39 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		(
 			NULL,
 			"Edit", "",
-			WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER,
+			WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE,
 			10, 50,
-			window_width - 20, window_height - 100,
+			window_width-35, window_height - 100,
 			hwnd,
 			(HMENU)IDC_EDIT,
 			GetModuleHandle(NULL),
 			NULL
 		);
-		//CreateWindowEx
-		//(
-		//	NULL,
-		//	"Button", "Применить",
-		//	WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-		//	450, 75,
-		//	110, 25,
-		//	hwnd,
-		//	(HMENU)IDC_BUTTON,
-		//	GetModuleHandle(NULL),
-		//	NULL
-		//);
+		CreateWindowEx
+		(
+			NULL,
+			"Button", "Сохранить",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			10, 25,
+			110, 25,
+			hwnd,
+			(HMENU)IDC_BUTTON,
+			GetModuleHandle(NULL),
+			NULL
+		);
+
+		CreateWindowEx
+		(
+			NULL,
+			"Button", "Открыть",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			130, 25,
+			110, 25,
+			hwnd,
+			(HMENU)IDC_BUTTON_C,
+			GetModuleHandle(NULL),
+			NULL
+		);
 
 		break;
 	case WM_MOVE:
@@ -154,21 +170,37 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	case WM_COMMAND:
+	{
+		OPENFILENAME ofn;
+		char szFile[260] = { 0 };
+
+		ZeroMemory(&ofn, sizeof(ofn));
+		ofn.lStructSize = sizeof(ofn);
+		ofn.hwndOwner = NULL;
+		ofn.lpstrFile = szFile;
+		ofn.nMaxFile = sizeof(szFile);
+		ofn.lpstrFilter = "Text Files\0*.txt\0All Files\0*.*\0";
+		ofn.nFilterIndex = 1;
+		ofn.lpstrDefExt = "txt";
+
 		switch (LOWORD(wParam))
 		{
 		case IDC_BUTTON:
 		{
 			HWND hEdit = GetDlgItem(hwnd, IDC_EDIT);
-			HWND hStatic = GetDlgItem(hwnd, IDC_STATIC);
-			CONST INT SIZE = 1024;
-			CHAR sz_buffer[SIZE] = {};
-			SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
-			SendMessage(hStatic, WM_SETTEXT, 0, (LPARAM)sz_buffer);
-			SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+			SaveTextFromEdit(hEdit, ofn);
+		}
+		break;
+		case IDC_BUTTON_C:
+		{
+			HWND hEdit = GetDlgItem(hwnd, IDC_EDIT);
+			SaveTextFromFile(hEdit, ofn);
 		}
 		break;
 		}
-		break;
+	}
+
+	break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
@@ -179,4 +211,58 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
 	return FALSE;
+}
+
+std::string GetEditText(HWND hwndEdit) {
+	int length = GetWindowTextLength(hwndEdit);
+	if (length == 0) return "";
+
+	char* buffer = new char[length + 1];
+	GetWindowText(hwndEdit, buffer, length + 1);
+	std::string text(buffer);
+	delete[] buffer;
+	return text;
+}
+
+
+void SaveTextFromEdit(HWND hwndEdit, OPENFILENAME ofn)
+{
+	ofn.Flags = OFN_OVERWRITEPROMPT;
+
+	if (GetSaveFileName(&ofn) == TRUE) {
+		std::string textToSave = GetEditText(hwndEdit);
+
+		std::ofstream outFile(ofn.lpstrFile);
+		if (outFile.is_open()) {
+			outFile << textToSave;
+			outFile.close();
+		}
+		else {
+			MessageBox(NULL, "Не удалось открыть файл для записи.", "Ошибка", MB_OK | MB_ICONERROR);
+		}
+	}
+}
+
+void SaveTextFromFile(HWND hwndEdit, OPENFILENAME ofn)
+{
+	if (GetSaveFileName(&ofn) == TRUE) {
+		std::ifstream outFile(ofn.lpstrFile);
+		if (outFile.is_open()) {
+			std::string file_buffer;
+
+			while (std::getline(outFile, file_buffer, '\n'))
+			{
+				file_buffer += '\n';
+				CONST CHAR* sz_buffer = file_buffer.c_str();
+				SendMessage(hwndEdit, EM_SETSEL, (WPARAM)-1, (LPARAM)-1);
+				SendMessage(hwndEdit, EM_REPLACESEL, TRUE, (LPARAM)sz_buffer);
+			}
+
+			outFile.close();
+		}
+		else {
+			MessageBox(NULL, "Не удалось открыть файл для записи.", "Ошибка", MB_OK | MB_ICONERROR);
+		}
+	}
+
 }

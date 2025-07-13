@@ -19,6 +19,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Font-onlyDll", "Font-onlyDl
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CalcSetup", "CalcSetup\CalcSetup.vdproj", "{9DCE253F-E175-7B89-E1AA-36F45B227300}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CalcSetupWizard", "CalcSetupWizard\CalcSetupWizard.vdproj", "{D0F512AB-7102-756D-3484-A8CE80F08878}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Text_Editor", "Text_Editor\Text_Editor.vcxproj", "{DFA42E51-FCB3-4CE1-A56B-4BCC4B0A6895}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -87,6 +91,18 @@ Global
 		{9DCE253F-E175-7B89-E1AA-36F45B227300}.Debug|x86.ActiveCfg = Debug
 		{9DCE253F-E175-7B89-E1AA-36F45B227300}.Release|x64.ActiveCfg = Release
 		{9DCE253F-E175-7B89-E1AA-36F45B227300}.Release|x86.ActiveCfg = Release
+		{D0F512AB-7102-756D-3484-A8CE80F08878}.Debug|x64.ActiveCfg = Debug
+		{D0F512AB-7102-756D-3484-A8CE80F08878}.Debug|x86.ActiveCfg = Debug
+		{D0F512AB-7102-756D-3484-A8CE80F08878}.Release|x64.ActiveCfg = Release
+		{D0F512AB-7102-756D-3484-A8CE80F08878}.Release|x86.ActiveCfg = Release
+		{DFA42E51-FCB3-4CE1-A56B-4BCC4B0A6895}.Debug|x64.ActiveCfg = Debug|x64
+		{DFA42E51-FCB3-4CE1-A56B-4BCC4B0A6895}.Debug|x64.Build.0 = Debug|x64
+		{DFA42E51-FCB3-4CE1-A56B-4BCC4B0A6895}.Debug|x86.ActiveCfg = Debug|Win32
+		{DFA42E51-FCB3-4CE1-A56B-4BCC4B0A6895}.Debug|x86.Build.0 = Debug|Win32
+		{DFA42E51-FCB3-4CE1-A56B-4BCC4B0A6895}.Release|x64.ActiveCfg = Release|x64
+		{DFA42E51-FCB3-4CE1-A56B-4BCC4B0A6895}.Release|x64.Build.0 = Release|x64
+		{DFA42E51-FCB3-4CE1-A56B-4BCC4B0A6895}.Release|x86.ActiveCfg = Release|Win32
+		{DFA42E51-FCB3-4CE1-A56B-4BCC4B0A6895}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
