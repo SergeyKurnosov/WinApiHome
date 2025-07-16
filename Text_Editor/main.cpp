@@ -101,9 +101,9 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		(
 			NULL,
 			"Static",
-			"Этот staticText создан при помощи функции CreateWindowEx().",
+			"Текстовый редактор",
 			WS_CHILD | WS_VISIBLE,
-			10, 10,
+			10, 5,
 			550, 25,
 			hwnd,
 			(HMENU)IDC_STATIC,
@@ -127,8 +127,8 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL,
 			"Button", "Сохранить",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			10, 25,
-			110, 25,
+			10, 30,
+			110, 20,
 			hwnd,
 			(HMENU)IDC_BUTTON,
 			GetModuleHandle(NULL),
@@ -140,8 +140,8 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL,
 			"Button", "Открыть",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			130, 25,
-			110, 25,
+			130, 30,
+			110, 20,
 			hwnd,
 			(HMENU)IDC_BUTTON_C,
 			GetModuleHandle(NULL),
@@ -167,6 +167,8 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			window_width, window_height
 		);
 		SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)sz_title);
+
+		MoveWindow(GetDlgItem(hwnd, IDC_EDIT), 10, 50, window_width - 35, window_height - 100, TRUE);
 	}
 	break;
 	case WM_COMMAND:
@@ -195,6 +197,9 @@ INT WINAPI WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			HWND hEdit = GetDlgItem(hwnd, IDC_EDIT);
 			SaveTextFromFile(hEdit, ofn);
+			SendMessage(GetDlgItem(hwnd, IDC_STATIC), WM_SETTEXT, 0, (LPARAM)ofn.lpstrFile);
+
+
 		}
 		break;
 		}
@@ -256,6 +261,7 @@ void SaveTextFromFile(HWND hwndEdit, OPENFILENAME ofn)
 				CONST CHAR* sz_buffer = file_buffer.c_str();
 				SendMessage(hwndEdit, EM_SETSEL, (WPARAM)-1, (LPARAM)-1);
 				SendMessage(hwndEdit, EM_REPLACESEL, TRUE, (LPARAM)sz_buffer);
+
 			}
 
 			outFile.close();
